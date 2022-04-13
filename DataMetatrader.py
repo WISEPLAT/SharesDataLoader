@@ -50,7 +50,7 @@ class DataMetatrader():
             print("connection to DB failed, error code =", ex)
             quit()
 
-    def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars):
+    def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
         if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
         if timeframe == "D1":   timeframe = mt5.TIMEFRAME_D1
         if timeframe == "H4":   timeframe = mt5.TIMEFRAME_H4
@@ -65,6 +65,7 @@ class DataMetatrader():
         # сконвертируем время в виде секунд в формат datetime
         if len(rates_frame.index):
             rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
+        if remove_last_bar: rates_frame = rates_frame[:-1]
         return rates_frame
 
     def ExportToCsvFromMetatrader(self, ticket, timeframe, how_many_bars, export_dir):
