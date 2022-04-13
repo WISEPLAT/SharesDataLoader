@@ -96,18 +96,9 @@ class DataMetatrader():
         return dataframe
 
     def ExportToCsvFromDb(self, ticket, timeframe, how_many_bars, export_dir):
-        if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
-        table_name = ticket + "_" + timeframe
-        self.cursor.execute(
-            "SELECT time, open, high, low, close, volume FROM `" + table_name + "`" + " ORDER BY time DESC LIMIT " + str(
-                how_many_bars)
-        )
-        # Get all data from table
-        rows = self.cursor.fetchall()
-        dataframe = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume"])
-        dataframe = dataframe[::-1].reset_index(drop=True)  # Reverse Ordering of DataFrame Rows + Reset index
+        df = self.GetShareDataFromDb(ticket, timeframe, how_many_bars)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
-        dataframe.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
+        df.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
     def always_get_share_data(self, ticket, timeframe):
         _timeframe = timeframe

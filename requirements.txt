@@ -1,0 +1,5 @@
+opencv-python
+mysqlclient
+MetaTrader5
+pandas
+pytz
