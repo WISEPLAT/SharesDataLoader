@@ -78,10 +78,10 @@ class DataMetatrader():
         df = df.drop('spread', 1)
         return df
 
-    def ExportToCsvFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, upper_heading=False):
+    def ExportToCsvFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
         df = self.GetShareDataFromMetatrader(ticket, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
-        df.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
+        df.to_csv(os.path.join(export_dir, prefix + ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
     def GetShareDataFromDb(self, ticket, timeframe, how_many_bars, upper_heading=False):
         if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
@@ -100,10 +100,10 @@ class DataMetatrader():
         # print(dataframe.dtypes)
         return dataframe
 
-    def ExportToCsvFromDb(self, ticket, timeframe, how_many_bars, export_dir, upper_heading=False):
+    def ExportToCsvFromDb(self, ticket, timeframe, how_many_bars, export_dir, prefix='', upper_heading=False):
         df = self.GetShareDataFromDb(ticket, timeframe, how_many_bars, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
-        df.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
+        df.to_csv(os.path.join(export_dir, prefix + ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
     def always_get_share_data(self, ticket, timeframe):
         _timeframe = timeframe
