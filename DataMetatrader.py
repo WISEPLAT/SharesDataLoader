@@ -50,7 +50,7 @@ class DataMetatrader():
             print("connection to DB failed, error code =", ex)
             quit()
 
-    def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
+    def GetShareDataFromMetatraderRAW(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
         if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
         if timeframe == "D1":   timeframe = mt5.TIMEFRAME_D1
         if timeframe == "H4":   timeframe = mt5.TIMEFRAME_H4
@@ -68,7 +68,7 @@ class DataMetatrader():
         if remove_last_bar: rates_frame = rates_frame[:-1]
         return rates_frame
 
-    def GetShareDataFromMetatraderDOHLCV(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
+    def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
         df = self.GetShareDataFromMetatrader(ticket, timeframe, utc_till, how_many_bars, remove_last_bar)
         df.rename(columns={"time": "Date", "open": "Open", "high": "High", "low": "Low",
                            "close": "Close", "real_volume": "Volume"}, inplace=True)
@@ -76,26 +76,10 @@ class DataMetatrader():
         df = df.drop('spread', 1)
         return df
 
-    def ExportToCsvFromMetatrader(self, ticket, timeframe, how_many_bars, export_dir):
-        if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
-        if timeframe == "D1":   timeframe = mt5.TIMEFRAME_D1
-        if timeframe == "H4":   timeframe = mt5.TIMEFRAME_H4
-        if timeframe == "H1":   timeframe = mt5.TIMEFRAME_H1
-        if timeframe == "M30":  timeframe = mt5.TIMEFRAME_M30
-        if timeframe == "M15":  timeframe = mt5.TIMEFRAME_M15
-        if timeframe == "M5":   timeframe = mt5.TIMEFRAME_M5
-        if timeframe == "M1":   timeframe = mt5.TIMEFRAME_M1
-        rates = mt5.copy_rates_from(ticket, timeframe, utc_till, how_many_bars)
-        # создадим из полученных данных DataFrame
-        rates_frame = pd.DataFrame(rates)
-        # сконвертируем время в виде секунд в формат datetime
-        if len(rates_frame.index):
-            rates_frame['time'] = pd.to_datetime(rates_frame['time'], unit='s')
-        print(rates_frame)
-        # dataframe = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume"])
-        # dataframe = dataframe[::-1].reset_index(drop=True)  # Reverse Ordering of DataFrame Rows + Reset index
-        # if not os.path.exists(export_dir): os.makedirs(export_dir)
-        # dataframe.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
+    def ExportToCsvFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir):
+        df = self.GetShareDataFromMetatrader(ticket, timeframe, utc_till, how_many_bars, remove_last_bar)
+        if not os.path.exists(export_dir): os.makedirs(export_dir)
+        df.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
     def GetShareDataFromDb(self, ticket, timeframe, how_many_bars):
         if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
