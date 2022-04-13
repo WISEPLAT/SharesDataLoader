@@ -110,9 +110,19 @@ class DataMetatrader():
         dataframe.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
     def always_get_share_data(self, ticket, timeframe):
-        _timeframe = "D1"
+        _timeframe = timeframe
+        if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
+        if timeframe == "D1":   timeframe = mt5.TIMEFRAME_D1
+        if timeframe == "H4":   timeframe = mt5.TIMEFRAME_H4
+        if timeframe == "H1":   timeframe = mt5.TIMEFRAME_H1
+        if timeframe == "M30":  timeframe = mt5.TIMEFRAME_M30
+        if timeframe == "M15":  timeframe = mt5.TIMEFRAME_M15
+        if timeframe == "M5":   timeframe = mt5.TIMEFRAME_M5
+        if timeframe == "M1":   timeframe = mt5.TIMEFRAME_M1
+
         how_many_bars = 0
         time_in_seconds_bar = 0
+
         if timeframe == mt5.TIMEFRAME_D1:   time_in_seconds_bar = 86400  # 60*60*24
         if timeframe == mt5.TIMEFRAME_H4:   time_in_seconds_bar = 14400  # 60*60*4
         if timeframe == mt5.TIMEFRAME_H1:   time_in_seconds_bar = 3600  # 60*60
@@ -120,14 +130,6 @@ class DataMetatrader():
         if timeframe == mt5.TIMEFRAME_M15:  time_in_seconds_bar = 900  # 60*15
         if timeframe == mt5.TIMEFRAME_M5:   time_in_seconds_bar = 300  # 60*5
         if timeframe == mt5.TIMEFRAME_M1:   time_in_seconds_bar = 60  # 60
-
-        if timeframe == mt5.TIMEFRAME_D1:   _timeframe = "D1"
-        if timeframe == mt5.TIMEFRAME_H4:   _timeframe = "H4"
-        if timeframe == mt5.TIMEFRAME_H1:   _timeframe = "H1"
-        if timeframe == mt5.TIMEFRAME_M30:  _timeframe = "M30"
-        if timeframe == mt5.TIMEFRAME_M15:  _timeframe = "M15"
-        if timeframe == mt5.TIMEFRAME_M5:   _timeframe = "M5"
-        if timeframe == mt5.TIMEFRAME_M1:   _timeframe = "M1"
 
         table_name = ticket + "_" + _timeframe
 
