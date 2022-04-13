@@ -68,20 +68,22 @@ class DataMetatrader():
         if remove_last_bar: rates_frame = rates_frame[:-1]
         return rates_frame
 
-    def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
+    def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading=False):
         df = self.GetShareDataFromMetatraderRAW(ticket, timeframe, utc_till, how_many_bars, remove_last_bar)
-        df.rename(columns={"time": "Date", "open": "Open", "high": "High", "low": "Low",
-                           "close": "Close", "real_volume": "Volume"}, inplace=True)
+        if upper_heading:
+            df.rename(columns={"time": "Date", "open": "Open", "high": "High", "low": "Low", "close": "Close", "real_volume": "Volume"}, inplace=True)
+        else:
+            df.rename(columns={"time": "datetime", "real_volume": "volume"}, inplace=True)
         df = df.drop('tick_volume', 1)
         df = df.drop('spread', 1)
         return df
 
-    def ExportToCsvFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir):
-        df = self.GetShareDataFromMetatrader(ticket, timeframe, utc_till, how_many_bars, remove_last_bar)
+    def ExportToCsvFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, upper_heading=False):
+        df = self.GetShareDataFromMetatrader(ticket, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
         df.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
-    def GetShareDataFromDb(self, ticket, timeframe, how_many_bars):
+    def GetShareDataFromDb(self, ticket, timeframe, how_many_bars, upper_heading=False):
         if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
         table_name = ticket + "_" + timeframe
         self.cursor.execute(
@@ -90,13 +92,16 @@ class DataMetatrader():
         )
         # Get all data from table
         rows = self.cursor.fetchall()
-        dataframe = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume"])
+        if upper_heading:
+            dataframe = pd.DataFrame(rows, columns=["Date", "Open", "High", "Low", "Close", "Volume"])
+        else:
+            dataframe = pd.DataFrame(rows, columns=["datetime", "open", "high", "low", "close", "volume"])
         dataframe = dataframe[::-1].reset_index(drop=True)  # Reverse Ordering of DataFrame Rows + Reset index
         # print(dataframe.dtypes)
         return dataframe
 
-    def ExportToCsvFromDb(self, ticket, timeframe, how_many_bars, export_dir):
-        df = self.GetShareDataFromDb(ticket, timeframe, how_many_bars)
+    def ExportToCsvFromDb(self, ticket, timeframe, how_many_bars, export_dir, upper_heading=False):
+        df = self.GetShareDataFromDb(ticket, timeframe, how_many_bars, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
         df.to_csv(os.path.join(export_dir, ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
