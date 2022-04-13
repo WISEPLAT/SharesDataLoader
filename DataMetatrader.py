@@ -69,7 +69,7 @@ class DataMetatrader():
         return rates_frame
 
     def GetShareDataFromMetatrader(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
-        df = self.GetShareDataFromMetatrader(ticket, timeframe, utc_till, how_many_bars, remove_last_bar)
+        df = self.GetShareDataFromMetatraderRAW(ticket, timeframe, utc_till, how_many_bars, remove_last_bar)
         df.rename(columns={"time": "Date", "open": "Open", "high": "High", "low": "Low",
                            "close": "Close", "real_volume": "Volume"}, inplace=True)
         df = df.drop('tick_volume', 1)
