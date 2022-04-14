@@ -51,7 +51,9 @@ class DataMetatrader():
             quit()
 
     def GetShareDataFromMetatraderRAW(self, ticket, timeframe, utc_till, how_many_bars, remove_last_bar=False):
-        if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
+        if timeframe not in ["MN1", "W1", "D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
+        if timeframe == "MN1":   timeframe = mt5.TIMEFRAME_MN1
+        if timeframe == "W1":   timeframe = mt5.TIMEFRAME_W1
         if timeframe == "D1":   timeframe = mt5.TIMEFRAME_D1
         if timeframe == "H4":   timeframe = mt5.TIMEFRAME_H4
         if timeframe == "H1":   timeframe = mt5.TIMEFRAME_H1
@@ -84,7 +86,7 @@ class DataMetatrader():
         df.to_csv(os.path.join(export_dir, prefix + ticket + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
     def GetShareDataFromDb(self, ticket, timeframe, how_many_bars, upper_heading=False):
-        if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
+        if timeframe not in ["MN1", "W1", "D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
         table_name = ticket + "_" + timeframe
         self.cursor.execute(
             "SELECT time, open, high, low, close, volume FROM `" + table_name + "`" + " ORDER BY time DESC LIMIT " + str(
@@ -107,7 +109,9 @@ class DataMetatrader():
 
     def always_get_share_data(self, ticket, timeframe):
         _timeframe = timeframe
-        if timeframe not in ["D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
+        if timeframe not in ["MN1", "W1", "D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"
+        if timeframe == "MN1":   timeframe = mt5.TIMEFRAME_MN1
+        if timeframe == "W1":   timeframe = mt5.TIMEFRAME_W1
         if timeframe == "D1":   timeframe = mt5.TIMEFRAME_D1
         if timeframe == "H4":   timeframe = mt5.TIMEFRAME_H4
         if timeframe == "H1":   timeframe = mt5.TIMEFRAME_H1
