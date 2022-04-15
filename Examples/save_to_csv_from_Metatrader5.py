@@ -15,7 +15,7 @@ if __name__ == '__main__':
     utc_till = datetime.datetime.now() + datetime.timedelta(days=1)
     print(utc_till)
 
-    load_data = DataMetatrader(ticket)
+    load_data = DataMetatrader()
     load_data.ConnectToMetatrader5(path=f"C:\Program Files\FINAM MetaTrader 5\terminal64.exe")
 
     # data = load_data.GetShareDataFromMetatrader(ticket=ticket, timeframe=timeframe, utc_till=utc_till, how_many_bars=how_many_bars, remove_last_bar=True, upper_heading=False)

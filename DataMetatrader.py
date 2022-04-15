@@ -12,8 +12,7 @@ import pytz  # импортируем модуль pytz для работы с �
 class DataMetatrader():
     """A class for loading shares data from MetaTrader5"""
 
-    def __init__(self, share_name):
-        self.share_name = share_name
+    def __init__(self):
         self.conn = None
         self.cursor = None
         self.connection_to_db = False
