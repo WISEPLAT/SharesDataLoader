@@ -1,7 +1,7 @@
 # pip install mysqlclient MetaTrader5 pandas pytz
 
 import os
-#import cv2
+#import cv2 #pip install opencv-python
 import MySQLdb  # импортируем модуль для работы с БД MySql
 import MetaTrader5 as mt5  # импортируем модуль для подключения к MetaTrader5
 import pandas as pd  # импортируем модуль pandas для вывода полученных данных в табличной форме
