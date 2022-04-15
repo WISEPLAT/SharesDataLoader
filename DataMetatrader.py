@@ -1,7 +1,7 @@
-# pip install opencv-python mysqlclient MetaTrader5 pandas pytz
+# pip install mysqlclient MetaTrader5 pandas pytz
 
 import os
-import cv2
+#import cv2
 import MySQLdb  # импортируем модуль для работы с БД MySql
 import MetaTrader5 as mt5  # импортируем модуль для подключения к MetaTrader5
 import pandas as pd  # импортируем модуль pandas для вывода полученных данных в табличной форме
@@ -214,7 +214,7 @@ class DataMetatrader():
                     print(wait_for_calculated - sec)
                 else:
                     print(wait_for_calculated - sec, end=" ")
-                cv2.waitKey(1000)
+                time.sleep(1)
 
             # add new data to table
             # print(datetime.datetime.now())
@@ -259,7 +259,7 @@ class DataMetatrader():
                         print("We have got next bar from Metatrader")
                     else:
                         print("Will try again - to get next bar ... ")
-                        cv2.waitKey(500)  # 500 milsec delay
+                        time.sleep(0.5)  # 500 milsec delay
 
             # выведем данные
             print("\nВыведем датафрейм с данными")
