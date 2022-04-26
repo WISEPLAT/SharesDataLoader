@@ -63,6 +63,7 @@ class DataQuik():
 
     def ExportToCsvFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
         df = self.GetShareDataFromQuik(qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
+        df.reset_index(inplace=True)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
         df.to_csv(os.path.join(export_dir, prefix + ticker + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
