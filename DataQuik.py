@@ -46,9 +46,10 @@ class DataQuik():
         if timeframe == 'H1': interval = 60
         if timeframe == 'H2': interval = 120
         if timeframe == 'H4': interval = 240
-        if timeframe == 'D1': interval = 1440  # Дневной временной интервал # В минутах
-        if timeframe == 'W1': interval = 10080  # Недельный временной интервал # В минутах
-        if timeframe == 'MN1':  interval = 23200  # Месячный временной интервал # В минутах
+        _tf = interval
+        if timeframe == 'D1': interval = 1440; _tf = "D"  # Дневной временной интервал # В минутах
+        if timeframe == 'W1': interval = 10080; _tf = "W"  # Недельный временной интервал # В минутах
+        if timeframe == 'MN1':  interval = 23200; _tf = "MN"  # Месячный временной интервал # В минутах
 
         newBars = qpProvider.GetCandlesFromDataSource(classCode, secCode, interval, 0)[
             "data"]  # Получаем все свечки
@@ -91,8 +92,10 @@ class DataQuik():
                 new_col_date.append(_date)
                 new_col_time.append(_time)
 
-            pdBars.insert(0, '<DATA>', new_col_date)
-            pdBars.insert(1, '<TIME>', new_col_time)
+            pdBars.insert(0, '<TICKER>', secCode)
+            pdBars.insert(1, '<PER>', _tf)
+            pdBars.insert(2, '<DATA>', new_col_date)
+            pdBars.insert(3, '<TIME>', new_col_time)
             pdBars = pdBars.drop('datetime', 1)
 
             pdBars.rename(columns={"open": "<OPEN>", "high": "<HIGH>", "low": "<LOW>", "close": "<CLOSE>", "volume": "<VOL>"}, inplace=True)
