@@ -79,10 +79,10 @@ class DataMetatrader():
         df = df.drop('spread', 1)
         return df
 
-    def ExportToCsvFromMetatrader(self, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
+    def ExportToCsvFromMetatrader(self, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False, file_ext='csv'):
         df = self.GetShareDataFromMetatrader(ticker, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
-        df.to_csv(os.path.join(export_dir, prefix + ticker + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
+        df.to_csv(os.path.join(export_dir, f"{prefix}{ticker}_{timeframe}.{file_ext}"), index=False, encoding='utf-8')
 
     def GetShareDataFromDb(self, ticker, timeframe, how_many_bars, upper_heading=False):
         if timeframe not in ["MN1", "W1", "D1", "H4", "H1", "M30", "M15", "M5", "M1"]: return "Error in timeframe"

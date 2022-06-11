@@ -102,7 +102,7 @@ class DataQuik():
 
         return pdBars
 
-    def ExportToCsvFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
+    def ExportToCsvFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False, file_ext='csv'):
         """
         Экспортируем полученные данные с Quik в CSV
         upper_heading формирует названия колонок:
@@ -112,7 +112,7 @@ class DataQuik():
         """
         df = self.GetShareDataFromQuik(qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
-        df.to_csv(os.path.join(export_dir, prefix + ticker + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
+        df.to_csv(os.path.join(export_dir, f"{prefix}{ticker}_{timeframe}.{file_ext}"), index=False, encoding='utf-8')
 
     def ConnectToDb(self, host, user, passwd, db):
         try:
