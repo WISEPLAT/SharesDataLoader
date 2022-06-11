@@ -59,9 +59,37 @@ class DataQuik():
         pdBars.index.name = 'datetime'  # Ставим название индекса даты/времени
         pdBars.volume = pd.to_numeric(pdBars.volume, downcast='integer')  # Объемы могут быть только целыми
 
-        if upper_heading:
+        if upper_heading == "Date":
             pdBars.index.name = 'Date'  # Ставим название индекса даты/времени
             pdBars.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"}, inplace=True)
+
+        if upper_heading == "TSLab":
+            # https://doc.tslab.pro/tslab/postavshiki-dannykh/servera-istorii/tekstovye-faily-i-offlain-postavshiki-dannykh/tekstovye-faily-s-istoricheskimi-dannymi
+
+            # pdBars.reset_index(inplace=True)
+            # print(pdBars, len(pdBars), pdBars.dtypes)
+            # for d in pdBars['datetime']:
+            #     pdBars['date'] = d.date()
+            #     pdBars['time'] = d.time()
+
+            new_col_date = []
+            new_col_time = []
+
+            for i in range(len(pdBars)):
+                data_date = pdBars.index[i]  # берем дату # print(data.index[0])
+                _date = data_date.date()  # дата
+                _time = data_date.time()  # время
+                # print(data_date, _date, _time)
+                new_col_date.append(_date)
+                new_col_time.append(_time)
+
+            pdBars.insert(0, '<DATA>', new_col_date)
+            pdBars.insert(1, '<TIME>', new_col_time)
+
+            pdBars.reset_index(inplace=True)
+            pdBars = pdBars.drop('datetime', 1)
+
+            pdBars.rename(columns={"open": "<OPEN>", "high": "<HIGH>", "low": "<LOW>", "close": "<CLOSE>", "volume": "<VOL>"}, inplace=True)
 
         return pdBars
 
