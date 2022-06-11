@@ -59,6 +59,10 @@ class DataQuik():
         pdBars.index.name = 'datetime'  # Ставим название индекса даты/времени
         pdBars.volume = pd.to_numeric(pdBars.volume, downcast='integer')  # Объемы могут быть только целыми
 
+        if upper_heading:
+            pdBars.index.name = 'Date'  # Ставим название индекса даты/времени
+            pdBars.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"}, inplace=True)
+
         return pdBars
 
     def ExportToCsvFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
