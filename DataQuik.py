@@ -63,6 +63,8 @@ class DataQuik():
             pdBars.index.name = 'Date'  # Ставим название индекса даты/времени
             pdBars.rename(columns={"open": "Open", "high": "High", "low": "Low", "close": "Close", "volume": "Volume"}, inplace=True)
 
+        pdBars.reset_index(inplace=True)
+
         if upper_heading == "TSLab":
             # https://doc.tslab.pro/tslab/postavshiki-dannykh/servera-istorii/tekstovye-faily-i-offlain-postavshiki-dannykh/tekstovye-faily-s-istoricheskimi-dannymi
 
@@ -76,7 +78,7 @@ class DataQuik():
             new_col_time = []
 
             for i in range(len(pdBars)):
-                data_date = pdBars.index[i]  # берем дату # print(data.index[0])
+                data_date = pdBars.datetime[i]  # берем дату # print(data.index[0])
                 _date = data_date.date()  # дата
                 _time = data_date.time()  # время
                 # print(data_date, _date, _time)
@@ -85,8 +87,6 @@ class DataQuik():
 
             pdBars.insert(0, '<DATA>', new_col_date)
             pdBars.insert(1, '<TIME>', new_col_time)
-
-            pdBars.reset_index(inplace=True)
             pdBars = pdBars.drop('datetime', 1)
 
             pdBars.rename(columns={"open": "<OPEN>", "high": "<HIGH>", "low": "<LOW>", "close": "<CLOSE>", "volume": "<VOL>"}, inplace=True)
@@ -95,7 +95,6 @@ class DataQuik():
 
     def ExportToCsvFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
         df = self.GetShareDataFromQuik(qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
-        df.reset_index(inplace=True)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
         df.to_csv(os.path.join(export_dir, prefix + ticker + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
 
