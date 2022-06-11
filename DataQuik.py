@@ -86,8 +86,8 @@ class DataQuik():
 
             for i in range(len(pdBars)):
                 data_date = pdBars.datetime[i]  # берем дату # print(data.index[0])
-                _date = data_date.date()  # дата
-                _time = data_date.time()  # время
+                _date = data_date.strftime("%Y%m%d")  # дата    # data_date.date()
+                _time = data_date.strftime("%H%M%S")  # время   # data_date.time()
                 # print(data_date, _date, _time)
                 new_col_date.append(_date)
                 new_col_time.append(_time)
