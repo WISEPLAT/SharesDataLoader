@@ -94,7 +94,7 @@ class DataQuik():
 
             pdBars.insert(0, '<TICKER>', secCode)
             pdBars.insert(1, '<PER>', _tf)
-            pdBars.insert(2, '<DATA>', new_col_date)
+            pdBars.insert(2, '<DATE>', new_col_date)
             pdBars.insert(3, '<TIME>', new_col_time)
             pdBars = pdBars.drop('datetime', 1)
 
