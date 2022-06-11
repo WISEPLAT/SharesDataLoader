@@ -27,7 +27,13 @@ class DataQuik():
         # self._utc_till = datetime.datetime.now(self.timezone)# datetime.datetime(2021, 10, 10, tzinfo=self.timezone)
 
     def GetShareDataFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading=False):
-        # Данные тикера
+        """
+        Получаем данные с Quik в виде dateframe
+        upper_heading формирует названия колонок:
+        # upper_heading == False        ==>     datetime,open,high,low,close,volume
+        # upper_heading == "Date"       ==>     Date,Open,High,Low,Close,Volume
+        # upper_heading == "TSLab"      ==>     <DATA>,<TIME>,<OPEN>,<HIGH>,<LOW>,<CLOSE>,<VOL>
+        """
         part_symbol = ticker.split(".")
         classCode = part_symbol[0]  # Класс тикера
         secCode = part_symbol[1]  # Тикер
@@ -94,6 +100,13 @@ class DataQuik():
         return pdBars
 
     def ExportToCsvFromQuik(self, qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, export_dir, prefix='', upper_heading=False):
+        """
+        Экспортируем полученные данные с Quik в CSV
+        upper_heading формирует названия колонок:
+        # upper_heading == False        ==>     datetime,open,high,low,close,volume
+        # upper_heading == "Date"       ==>     Date,Open,High,Low,Close,Volume
+        # upper_heading == "TSLab"      ==>     <DATA>,<TIME>,<OPEN>,<HIGH>,<LOW>,<CLOSE>,<VOL>
+        """
         df = self.GetShareDataFromQuik(qpProvider, ticker, timeframe, utc_till, how_many_bars, remove_last_bar, upper_heading)
         if not os.path.exists(export_dir): os.makedirs(export_dir)
         df.to_csv(os.path.join(export_dir, prefix + ticker + "_" + timeframe + ".csv"), index=False, encoding='utf-8')
